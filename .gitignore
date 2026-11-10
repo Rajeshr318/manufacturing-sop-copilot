@@ -1,0 +1,17 @@
+# Environment
+.env
+venv/
+.venv/
+
+# Python
+__pycache__/
+*.py[cod]
+
+# Vector database
+vectorstore/
+
+# IDE and OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
