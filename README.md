@@ -1,520 +1,385 @@
-\# Manufacturing SOP AI Copilot
+# Manufacturing SOP AI Copilot
 
+An AI-powered Manufacturing SOP Copilot built using **Retrieval-Augmented Generation (RAG)** to help manufacturing employees retrieve accurate information from technical manuals, quality inspection procedures, preventive maintenance documents, and safety instructions.
 
+The application allows users to ask questions in natural language and receive context-based answers with supporting document references and page numbers.
 
-An AI-powered Manufacturing SOP Copilot built using Retrieval-Augmented Generation (RAG) to help manufacturing employees retrieve information from technical manuals, quality inspection procedures, maintenance documents, and safety instructions.
+## Project Overview
 
+Manufacturing employees often need to search through multiple PDF documents to find specific technical information. Manually searching lengthy documents can be time-consuming.
 
+Manufacturing SOP AI Copilot addresses this problem through a RAG-based chatbot that:
 
-\## Project Overview
+- Extracts information from manufacturing PDF documents.
+- Retrieves relevant passages using semantic search.
+- Generates context-grounded answers using an LLM.
+- Displays supporting source documents and page references.
+- Refuses to answer when sufficient information is unavailable.
 
+## Key Features
 
+- **PDF Document Processing:** Extract text and page metadata from PDF documents.
+- **Semantic Search:** Retrieve relevant information using Sentence Transformers.
+- **Vector Database:** Store and search document embeddings using ChromaDB.
+- **RAG Pipeline:** Generate answers using LangChain and Groq.
+- **Source Citations:** Display supporting PDF documents and page references.
+- **Revision Handling:** Exclude superseded SOP revisions from normal retrieval.
+- **Relevance Filtering:** Filter retrieved passages using a similarity-distance threshold.
+- **No-Answer Handling:** Avoid generating unsupported answers.
+- **Citation Validation:** Validate generated citation IDs against retrieved passages.
+- **Chatbot Interface:** Interact with manufacturing documents through Streamlit.
+- **REST API:** Serve question-answering functionality through FastAPI.
+- **Mobile Access:** Access the chatbot from another device on the same local Wi-Fi network.
 
-Manufacturing employees often need to search through multiple PDF documents to find specific technical information. This project provides a chatbot interface where users can ask questions in natural language and receive answers based on the available manufacturing documents.
+## Application Screenshots
 
+### 1. Chatbot Interface
 
+![Chatbot Home](screenshots/01_home.png.png)
 
-The application retrieves relevant document passages, generates answers using an LLM, and displays supporting document references and page numbers.
+### 2. RAG Answer with Source Citation
 
+![RAG Answer](screenshots/02_rag_answer.png.png)
 
+### 3. Quality Inspection
 
-\## Key Features
+![Quality Inspection](screenshots/03_quality_inspection.png.png)
 
+### 4. Yearly Preventive Maintenance
 
+![Yearly Maintenance](screenshots/04_yearly_maintenance.png.png)
 
-\- PDF document ingestion and text extraction.
+### 5. Unsupported Question Handling
 
-\- Text chunking with overlapping passages.
+![No Answer Handling](screenshots/05_no_answer.png.png)
 
-\- Semantic search using Sentence Transformers.
+### 6. Mobile Chatbot Deployment
 
-\- Vector storage and retrieval using ChromaDB.
+![Mobile Chatbot](screenshots/06_mobile_chatbot.png.jpeg)
 
-\- Retrieval-Augmented Generation using LangChain and Groq.
+### 7. Mobile PDF Source Access
 
-\- FastAPI backend for question answering.
+![Mobile PDF](screenshots/07_mobile_pdf.png.jpeg)
 
-\- Streamlit frontend for chatbot interaction.
-
-\- Source document and page references.
-
-\- Relevance filtering for retrieved passages.
-
-\- Exclusion of superseded SOP revisions.
-
-\- No-answer handling for unsupported questions.
-
-\- Citation ID validation.
-
-
-
-\## Technology Stack
-
-
+## Technology Stack
 
 | Component | Technology |
-
 |---|---|
-
 | Programming Language | Python 3.12 |
-
 | Backend | FastAPI |
-
 | Frontend | Streamlit |
-
 | LLM Provider | Groq |
-
 | LLM Integration | LangChain |
-
 | Embedding Model | all-MiniLM-L6-v2 |
-
 | Vector Database | ChromaDB |
-
 | PDF Processing | PyMuPDF |
+| Environment Management | python-dotenv |
+| Testing | pytest |
 
-| Environment Variables | python-dotenv |
+## System Architecture
 
+```mermaid
+flowchart TD
+    A[Manufacturing PDF Documents] --> B[PDF Ingestion]
+    B --> C[Text Extraction and Metadata]
+    C --> D[Text Chunking]
+    D --> E[Embedding Generation]
+    E --> F[(ChromaDB Vector Store)]
 
+    U[User Question] --> G[Streamlit Chatbot]
+    G --> H[FastAPI Backend]
+    H --> I[Semantic Retrieval]
+    F --> I
+    I --> J[Relevance Filtering]
+    J --> K[Retrieved Context]
+    K --> L[Groq LLM via LangChain]
+    L --> M[Answer and Citation Validation]
+    M --> N[Response with Source References]
+    N --> G
+```
 
-\## Project Structure
-
-
+## Project Structure
 
 ```text
-
 manufacturing-sop-copilot/
-
 │
-
 ├── backend/
-
-│   ├── \_\_init\_\_.py
-
+│   ├── __init__.py
 │   ├── main.py
-
 │   ├── ingestion.py
-
 │   ├── chunking.py
-
-│   ├── vector\_store.py
-
+│   ├── vector_store.py
 │   ├── retrieval.py
-
-│   ├── rag\_pipeline.py
-
-│   └── test\_groq.py
-
+│   ├── rag_pipeline.py
+│   ├── test_groq.py
+│   └── test_retrieval.py
 │
-
 ├── frontend/
-
 │   └── app.py
-
 │
-
 ├── documents/
-
-│   ├── QC-SOP-014\_Rev03\_Incoming\_Material\_Inspection.pdf
-
-│   ├── QC-SOP-014\_Rev04\_Incoming\_Material\_Inspection.pdf
-
-│   ├── SAF-SOP-003\_Lockout\_Tagout\_Procedure.pdf
-
-│   └── MNT-MAN-CNC-02\_TX-200\_Preventive\_Maintenance.pdf
-
+│   ├── QC-SOP-014_Rev03_Incoming_Material_Inspection.pdf
+│   ├── QC-SOP-014_Rev04_Incoming_Material_Inspection.pdf
+│   ├── SAF-SOP-003_Lockout_Tagout_Procedure.pdf
+│   └── MNT-MAN-CNC-02_TX-200_Preventive_Maintenance.pdf
 │
-
-├── vectorstore/
-
+├── screenshots/
+│   ├── 01_home.png.png
+│   ├── 02_rag_answer.png.png
+│   ├── 03_quality_inspection.png.png
+│   ├── 04_yearly_maintenance.png.png
+│   ├── 05_no_answer.png.png
+│   ├── 06_mobile_chatbot.png.jpeg
+│   └── 07_mobile_pdf.png.jpeg
+│
 ├── tests/
-
+│   └── test_rag_pipeline.py
+│
+├── vectorstore/
+├── venv/
 ├── .env
-
 ├── .gitignore
-
 ├── requirements.txt
-
-├── USER\_JOURNEY.md
-
-├── AI\_CRITIQUE.md
-
+├── USER_JOURNEY.md
+├── AI_CRITIQUE.md
+├── FINAL_REFLECTION.md
 └── README.md
-
 ```
 
+Note: `.env`, `venv/`, and `vectorstore/` are local runtime resources and should remain excluded from Git.
 
+## RAG Workflow
 
-\## Installation and Setup
+1. **Document Ingestion:** Extract text and page metadata from manufacturing PDF documents using PyMuPDF.
+2. **Text Chunking:** Divide extracted content into smaller overlapping passages.
+3. **Embedding Generation:** Convert document passages into numerical embeddings using Sentence Transformers.
+4. **Vector Storage:** Store active document embeddings in ChromaDB.
+5. **Semantic Retrieval:** Retrieve relevant passages based on the user's question.
+6. **Relevance Filtering:** Filter retrieved passages using a configured distance threshold.
+7. **Answer Generation:** Pass the retrieved context and question to the Groq LLM through LangChain.
+8. **Citation Validation:** Validate generated citation IDs against retrieved passages.
+9. **Response Generation:** Display the answer and supporting source references in Streamlit.
 
+## Installation and Setup
 
-
-\### 1. Clone the repository
-
-
+### 1. Clone the repository
 
 ```bash
-
-git clone <your-github-repository-url>
+git clone https://github.com/Rajeshr318/manufacturing-sop-copilot.git
 
 cd manufacturing-sop-copilot
-
 ```
 
-
-
-\### 2. Create a virtual environment
-
-
+### 2. Create a virtual environment
 
 ```bash
-
 python -m venv venv
-
 ```
-
-
 
 Activate it on Windows:
 
-
-
 ```powershell
-
-venv\\Scripts\\Activate.ps1
-
+venv\Scripts\Activate.ps1
 ```
 
-
-
-\### 3. Install dependencies
-
-
+### 3. Install dependencies
 
 ```bash
-
-pip install -r requirements.txt
-
+python -m pip install -r requirements.txt
 ```
 
-
-
-\### 4. Configure environment variables
-
-
+### 4. Configure environment variables
 
 Create a `.env` file in the project root:
 
-
-
 ```env
-
-GROQ\_API\_KEY=your\_groq\_api\_key
-
-GROQ\_MODEL=openai/gpt-oss-20b
-
+GROQ_API_KEY=your_groq_api_key
+GROQ_MODEL=openai/gpt-oss-20b
 ```
 
+Replace the placeholder with your own Groq API key.
 
+**Important:** Never commit your actual API key or `.env` file to GitHub.
 
-Replace the placeholder with your own Groq API key. Never upload your actual `.env` file to GitHub.
+### 5. Add manufacturing documents
 
-
-
-\### 5. Add manufacturing documents
-
-
-
-Place the required manufacturing PDF documents inside the `documents/` folder.
-
-
+Place the required PDF documents inside the `documents/` directory.
 
 The superseded QC-SOP-014 Rev03 document is retained for revision-handling tests but excluded from normal retrieval.
 
+### 6. Process documents
 
-
-\### 6. Process documents
-
-
-
-Run the document processing modules in order:
-
-
+Run the processing modules in order:
 
 ```bash
-
 python -m backend.ingestion
 
 python -m backend.chunking
 
-python -m backend.vector\_store
-
+python -m backend.vector_store
 ```
 
+These steps extract PDF text, create overlapping chunks, generate embeddings, and store active document chunks in ChromaDB.
 
+## Running the Application
 
-These steps extract PDF text, create chunks, generate embeddings, and store active document chunks in ChromaDB.
-
-
-
-\## Running the Application
-
-
-
-\### Start the FastAPI backend
-
-
+### Start FastAPI Backend
 
 Open the first terminal:
 
-
-
 ```bash
-
 python -m uvicorn backend.main:app --reload
-
 ```
 
-
-
-Backend API:
-
-
+Backend URL:
 
 ```text
-
 http://127.0.0.1:8000
-
 ```
-
-
 
 Swagger API documentation:
 
-
-
 ```text
-
 http://127.0.0.1:8000/docs
-
 ```
 
+Health endpoint:
 
+```text
+http://127.0.0.1:8000/health
+```
 
-\### Start the Streamlit frontend
-
-
+### Start Streamlit Frontend
 
 Open a second terminal:
 
-
-
 ```bash
-
 streamlit run frontend/app.py
-
 ```
 
+The chatbot will open in your browser.
 
+## Example Questions
 
-The application will open in your browser.
+1. What is the recommended coolant concentration for the TX-200 CNC machine?
+2. What does AL-104 indicate, and what action should the operator take?
+3. Who is authorized to remove a personal Lockout/Tagout lock?
+4. What is the BH-220 outer diameter tolerance?
+5. How frequently should spindle runout be checked?
 
+### Additional Custom Test Questions
 
-
-\## Example Questions
-
-
-
-1\. What is the recommended coolant concentration for the TX-200 CNC machine?
-
-2\. What does AL-104 indicate, and what action should the operator take?
-
-3\. Who is authorized to remove a personal Lockout/Tagout lock?
-
-4\. What is the BH-220 outer diameter tolerance?
-
-5\. How frequently should spindle runout be checked?
-
-
-
-\### Additional Custom Test Questions
-
-
-
-1\. What safety steps are required before TX-200 maintenance?
-
-2\. What is the normal hydraulic pressure range for TX-200?
-
-3\. What happens when a critical defect is identified in an incoming material lot?
-
-4\. What is the required torque for chuck mounting bolts?
-
-5\. What is the monthly electricity consumption of the Hosur factory?
-
-
+1. What safety steps are required before TX-200 maintenance?
+2. What is the normal hydraulic pressure range for TX-200?
+3. What happens when a critical defect is identified in an incoming material lot?
+4. What is the required torque for chuck mounting bolts?
+5. What is the monthly electricity consumption of the factory?
 
 The fifth question is intentionally unsupported by the available documents and should trigger the no-answer response.
 
+## Testing and Evaluation
 
-
-\## RAG Workflow
-
-
-
-1\. \*\*Document ingestion:\*\* Extract text and page metadata from PDF documents.
-
-2\. \*\*Chunking:\*\* Split extracted content into smaller overlapping text chunks.
-
-3\. \*\*Embedding generation:\*\* Convert document chunks into numerical embeddings.
-
-4\. \*\*Vector storage:\*\* Store active document embeddings in ChromaDB.
-
-5\. \*\*Retrieval:\*\* Find relevant passages using semantic similarity.
-
-6\. \*\*Answer generation:\*\* Send the retrieved context and user question to the Groq LLM through LangChain.
-
-7\. \*\*Citation validation:\*\* Validate generated citation IDs against retrieved passages.
-
-8\. \*\*Response:\*\* Display the answer and supporting source references in Streamlit.
-
-
-
-\## Testing and Evaluation
-
-
-
-The application was tested with five assignment sample questions and five additional custom questions.
-
-
+The application was evaluated using five assignment sample questions and five additional custom questions.
 
 Testing covered:
 
+- Machine operating parameters.
+- Preventive maintenance schedules.
+- Safety and Lockout/Tagout procedures.
+- Quality inspection requirements.
+- Document revision handling.
+- Source citation generation.
+- Unsupported question handling.
 
+Automated tests cover:
 
-\- Machine operating parameters.
+- Valid answer generation with valid citations.
+- Unsupported questions returning the no-answer response.
+- Invalid LLM JSON returning the no-answer response.
 
-\- Maintenance schedules.
-
-\- Safety procedures.
-
-\- Quality inspection requirements.
-
-\- Document revision handling.
-
-\- Unsupported question handling.
-
-\- Answer completeness and citation accuracy.
-
-
-
-The retrieval relevance threshold was initially calibrated using a small set of diagnostic questions and should be validated further with additional test cases.
-
-
-
-\## Local Network Deployment
-
-
-
-To make the application accessible to other devices on the same Wi-Fi network:
-
-
-
-1\. Start the FastAPI server with:
-
-
+Run automated tests using:
 
 ```bash
+python -m pytest tests/ -v
+```
 
+**Recorded automated test result:** 3 tests passed.
+
+Manual testing also verified the application through the Streamlit interface.
+
+## Local Network and Mobile Deployment
+
+The application was successfully tested using a mobile hotspot, allowing a mobile phone to access the chatbot running on the development laptop.
+
+### 1. Start FastAPI
+
+```bash
 python -m uvicorn backend.main:app --host 0.0.0.0 --port 8000
-
 ```
 
-
-
-2\. Start Streamlit with:
-
-
+### 2. Start Streamlit
 
 ```bash
-
-streamlit run frontend/app.py --server.address 0.0.0.0
-
+streamlit run frontend/app.py --server.address 0.0.0.0 --server.port 8501
 ```
 
-
-
-3\. Find the host computer's local IPv4 address:
-
-
+### 3. Find the host computer's IPv4 address
 
 ```powershell
-
 ipconfig
-
 ```
 
+### 4. Configure network URLs
 
+Configure the frontend API endpoint and PDF source links to use the host computer's local IPv4 address instead of `127.0.0.1`.
 
-4\. Access the Streamlit application from another device using:
-
-
+For example:
 
 ```text
-
-http://YOUR\_LOCAL\_IP:8501
-
+http://YOUR_LOCAL_IP:8000/ask
+http://YOUR_LOCAL_IP:8000/documents/
 ```
 
+### 5. Access from a mobile device
 
+Connect the laptop and mobile phone to the same Wi-Fi network or mobile hotspot.
 
-The frontend API URL must also be configured to use the host computer's local IP instead of `127.0.0.1` when accessing the backend from another device. Ensure Windows Firewall allows the required local network connections.
+Open the following address in the mobile browser:
 
+```text
+http://YOUR_LOCAL_IP:8501
+```
 
+The mobile deployment was tested successfully, including chatbot interaction and opening PDF source documents.
 
-\## Limitations
+Note: The host computer must remain running, and the required ports must be allowed through Windows Firewall. The local IP address may change when connecting to another network.
 
+## Limitations
 
+- Answer quality depends on the completeness and quality of the uploaded documents.
+- Semantic retrieval may miss relevant passages.
+- Similarity-distance thresholds require further evaluation across a larger test dataset.
+- Citation ID validation does not independently prove that every cited passage supports every answer detail.
+- Complex PDF tables may require additional structural preprocessing.
+- Updated SOP documents require manual reprocessing and indexing.
+- The application is not a replacement for official SOPs or authorized safety and maintenance decisions.
 
-\- Answers depend on the quality and completeness of the uploaded documents.
+## Future Improvements
 
-\- Semantic retrieval may miss relevant passages.
+- Implement hybrid search combining keyword and semantic retrieval.
+- Improve table-aware PDF extraction and chunking.
+- Add stronger citation and answer verification.
+- Implement automatic document revision management.
+- Support additional document formats.
+- Add user authentication and role-based access control.
+- Improve deployment configuration and security.
 
-\- Citation ID validation does not independently prove that a cited passage supports every answer detail.
+## Safety Disclaimer
 
-\- The application does not automatically synchronize updated SOP documents.
+This application is intended to assist users in retrieving information from manufacturing documents.
 
-\- The system is an information retrieval assistant, not a replacement for official SOPs or authorized safety and maintenance decisions.
+Always verify critical instructions against the latest approved SOP and follow authorized safety, quality, and maintenance procedures.
 
+## Author
 
-
-\## Future Improvements
-
-
-
-\- Improve retrieval using hybrid search.
-
-\- Add more robust citation and answer verification.
-
-\- Support additional document formats.
-
-\- Add document revision management.
-
-\- Implement user authentication and access control.
-
-\- Improve the user interface and deployment security.
-
-
-
-\## Safety Disclaimer
-
-
-
-This application is intended to assist users in finding information from manufacturing documents. Always verify critical instructions against the latest approved SOP and follow authorized safety, quality, and maintenance procedures.
-
-
-
-\## Author
-
-
-
-Developed as a Generative AI / Retrieval-Augmented Generation project using Python, LangChain, FastAPI, Streamlit, ChromaDB, and Groq.
-
+Developed as a Generative AI and Retrieval-Augmented Generation project using Python, LangChain, FastAPI, Streamlit, ChromaDB, Sentence Transformers, and Groq.
