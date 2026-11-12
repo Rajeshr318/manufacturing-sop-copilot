@@ -35,31 +35,31 @@ Manufacturing SOP AI Copilot addresses this problem through a RAG-based chatbot 
 
 ### 1. Chatbot Interface
 
-![Chatbot Home](screenshots/01_home.png.png)
+![Chatbot Home](screenshots/01_home.png)
 
 ### 2. RAG Answer with Source Citation
 
-![RAG Answer](screenshots/02_rag_answer.png.png)
+![RAG Answer](screenshots/02_rag_answer.png)
 
 ### 3. Quality Inspection
 
-![Quality Inspection](screenshots/03_quality_inspection.png.png)
+![Quality Inspection](screenshots/03_quality_inspection.png)
 
 ### 4. Yearly Preventive Maintenance
 
-![Yearly Maintenance](screenshots/04_yearly_maintenance.png.png)
+![Yearly Maintenance](screenshots/04_yearly_maintenance.png)
 
 ### 5. Unsupported Question Handling
 
-![No Answer Handling](screenshots/05_no_answer.png.png)
+![No Answer Handling](screenshots/05_no_answer.png)
 
 ### 6. Mobile Chatbot Deployment
 
-![Mobile Chatbot](screenshots/06_mobile_chatbot.png.jpeg)
+![Mobile Chatbot](screenshots/06_mobile_chatbot.jpeg)
 
 ### 7. Mobile PDF Source Access
 
-![Mobile PDF](screenshots/07_mobile_pdf.png.jpeg)
+![Mobile PDF](screenshots/07_mobile_pdf.jpeg)
 
 ## Technology Stack
 
@@ -102,48 +102,48 @@ flowchart TD
 
 ```text
 manufacturing-sop-copilot/
-│
-├── backend/
-│   ├── __init__.py
-│   ├── main.py
-│   ├── ingestion.py
-│   ├── chunking.py
-│   ├── vector_store.py
-│   ├── retrieval.py
-│   ├── rag_pipeline.py
-│   ├── test_groq.py
-│   └── test_retrieval.py
-│
-├── frontend/
-│   └── app.py
-│
-├── documents/
-│   ├── QC-SOP-014_Rev03_Incoming_Material_Inspection.pdf
-│   ├── QC-SOP-014_Rev04_Incoming_Material_Inspection.pdf
-│   ├── SAF-SOP-003_Lockout_Tagout_Procedure.pdf
-│   └── MNT-MAN-CNC-02_TX-200_Preventive_Maintenance.pdf
-│
-├── screenshots/
-│   ├── 01_home.png.png
-│   ├── 02_rag_answer.png.png
-│   ├── 03_quality_inspection.png.png
-│   ├── 04_yearly_maintenance.png.png
-│   ├── 05_no_answer.png.png
-│   ├── 06_mobile_chatbot.png.jpeg
-│   └── 07_mobile_pdf.png.jpeg
-│
-├── tests/
-│   └── test_rag_pipeline.py
-│
-├── vectorstore/
-├── venv/
-├── .env
-├── .gitignore
-├── requirements.txt
-├── USER_JOURNEY.md
-├── AI_CRITIQUE.md
-├── FINAL_REFLECTION.md
-└── README.md
+â”‚
+â”œâ”€â”€ backend/
+â”‚   â”œâ”€â”€ __init__.py
+â”‚   â”œâ”€â”€ main.py
+â”‚   â”œâ”€â”€ ingestion.py
+â”‚   â”œâ”€â”€ chunking.py
+â”‚   â”œâ”€â”€ vector_store.py
+â”‚   â”œâ”€â”€ retrieval.py
+â”‚   â”œâ”€â”€ rag_pipeline.py
+â”‚   â”œâ”€â”€ test_groq.py
+â”‚   â””â”€â”€ test_retrieval.py
+â”‚
+â”œâ”€â”€ frontend/
+â”‚   â””â”€â”€ app.py
+â”‚
+â”œâ”€â”€ documents/
+â”‚   â”œâ”€â”€ QC-SOP-014_Rev03_Incoming_Material_Inspection.pdf
+â”‚   â”œâ”€â”€ QC-SOP-014_Rev04_Incoming_Material_Inspection.pdf
+â”‚   â”œâ”€â”€ SAF-SOP-003_Lockout_Tagout_Procedure.pdf
+â”‚   â””â”€â”€ MNT-MAN-CNC-02_TX-200_Preventive_Maintenance.pdf
+â”‚
+â”œâ”€â”€ screenshots/
+â”‚   â”œâ”€â”€ 01_home.png
+â”‚   â”œâ”€â”€ 02_rag_answer.png
+â”‚   â”œâ”€â”€ 03_quality_inspection.png
+â”‚   â”œâ”€â”€ 04_yearly_maintenance.png
+â”‚   â”œâ”€â”€ 05_no_answer.png
+â”‚   â”œâ”€â”€ 06_mobile_chatbot.jpeg
+â”‚   â””â”€â”€ 07_mobile_pdf.jpeg
+â”‚
+â”œâ”€â”€ tests/
+â”‚   â””â”€â”€ test_rag_pipeline.py
+â”‚
+â”œâ”€â”€ vectorstore/
+â”œâ”€â”€ venv/
+â”œâ”€â”€ .env
+â”œâ”€â”€ .gitignore
+â”œâ”€â”€ requirements.txt
+â”œâ”€â”€ USER_JOURNEY.md
+â”œâ”€â”€ AI_CRITIQUE.md
+â”œâ”€â”€ FINAL_REFLECTION.md
+â””â”€â”€ README.md
 ```
 
 Note: `.env`, `venv/`, and `vectorstore/` are local runtime resources and should remain excluded from Git.
@@ -190,14 +190,25 @@ python -m pip install -r requirements.txt
 
 ### 4. Configure environment variables
 
-Create a `.env` file in the project root:
+Create a `.env` file in the project root by copying the provided template:
+
+```powershell
+Copy-Item .env.example .env
+```
+
+Open `.env` and configure the following variables:
 
 ```env
 GROQ_API_KEY=your_groq_api_key
 GROQ_MODEL=openai/gpt-oss-20b
+OLLAMA_MODEL=qwen2.5-coder:3b
+OLLAMA_BASE_URL=http://127.0.0.1:11434
+ENABLE_OLLAMA_FALLBACK=true
 ```
 
-Replace the placeholder with your own Groq API key.
+ Obtain a Groq API key from the Groq developer console.
+ Install Ollama and pull the configured model if you want to use the local fallback.
+ Set `ENABLE_OLLAMA_FALLBACK=false` if you do not want to use Ollama.
 
 **Important:** Never commit your actual API key or `.env` file to GitHub.
 
@@ -303,7 +314,7 @@ Run automated tests using:
 python -m pytest tests/ -v
 ```
 
-**Recorded automated test result:** 3 tests passed.
+**Recorded automated test result:** 8 tests passed.
 
 Manual testing also verified the application through the Streamlit interface.
 

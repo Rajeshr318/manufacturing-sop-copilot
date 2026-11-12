@@ -1,5 +1,4 @@
 
-
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_chroma import Chroma
 
@@ -9,7 +8,6 @@ from backend.vector_store import (
     EMBEDDING_MODEL
 )
 
-# Initial threshold based on our diagnostic tests.
 RELEVANCE_THRESHOLD = 1.40
 
 
@@ -28,56 +26,78 @@ def get_vector_store():
     return vector_store
 
 
-def retrieve_documents(question: str, top_k: int = 4):
+def retrieve_multiple_documents(
+    queries: list[str],
+    top_k: int = 6,
+    max_chunks: int = 12
+):
+    """
+    Retrieve relevant chunks for multiple query variations.
+
+    The vector store and embedding model are initialized once.
+    Duplicate chunks are removed before returning the results.
+    """
 
     vector_store = get_vector_store()
 
-    results = vector_store.similarity_search_with_score(
-        question,
-        k=top_k
-    )
+    unique_chunks = {}
 
-    retrieved_chunks = []
+    for query in queries:
 
-    for document, score in results:
-
-        distance = float(score)
-
-        # Reject weak semantic matches.
-        if distance > RELEVANCE_THRESHOLD:
+        if not query or not query.strip():
             continue
 
-        metadata = document.metadata
+        results = vector_store.similarity_search_with_score(
+            query,
+            k=top_k
+        )
 
-        # Reject superseded revisions.
-        if metadata.get("status") != "active":
-            continue
+        for document, score in results:
 
-        retrieved_chunks.append({
-            "content": document.page_content,
-            "source": metadata.get("source"),
-            "page": metadata.get("page"),
-            "status": metadata.get("status"),
-            "score": round(distance, 4)
-        })
+            distance = float(score)
 
-    return retrieved_chunks
+            if distance > RELEVANCE_THRESHOLD:
+                continue
 
+            metadata = document.metadata
 
-if __name__ == "__main__":
+            if metadata.get("status") != "active":
+                continue
 
-    question = (
-        "What is the recommended coolant concentration "
-        "for the TX-200 CNC machine?"
+            chunk = {
+                "content": document.page_content,
+                "source": metadata.get("source"),
+                "page": metadata.get("page"),
+                "status": metadata.get("status"),
+                "score": round(distance, 4)
+            }
+
+            # Avoid adding the same document chunk more than once.
+            chunk_key = (
+                chunk["source"],
+                chunk["page"],
+                chunk["content"]
+            )
+
+            if (
+                chunk_key not in unique_chunks
+                or distance < unique_chunks[chunk_key]["score"]
+            ):
+                unique_chunks[chunk_key] = chunk
+
+    # Best semantic matches first.
+    retrieved_chunks = sorted(
+        unique_chunks.values(),
+        key=lambda chunk: chunk["score"]
     )
 
-    results = retrieve_documents(question)
+    return retrieved_chunks[:max_chunks]
 
-    print("\nQUESTION:", question)
-    print("\nRELEVANT DOCUMENTS:")
 
-    for result in results:
-        print("\nSource:", result["source"])
-        print("Page:", result["page"])
-        print("Distance:", result["score"])
-        print("Content:", result["content"][:300])
+def retrieve_documents(question: str, top_k: int = 4):
+
+    return retrieve_multiple_documents(
+        queries=[question],
+        top_k=top_k,
+        max_chunks=top_k
+    )

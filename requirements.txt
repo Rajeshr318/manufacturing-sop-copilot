@@ -16,3 +16,4 @@ pydantic
 requests
 numpy
 pytest
+langchain-ollama==1.1.0

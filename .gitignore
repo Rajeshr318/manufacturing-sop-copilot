@@ -1,14 +1,21 @@
 # Environment
 .env
+.env.*
+!.env.example
 venv/
 .venv/
 
 # Python
 __pycache__/
 *.py[cod]
+.pytest_cache/
 
 # Vector database
 vectorstore/
+
+# Temporary files
+debug_retrieval.py
+frontend/app_backup.py
 
 # IDE and OS
 .vscode/
